@@ -1,0 +1,206 @@
+{
+  "name": "PowerChip E-commerce Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "order-created",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-order-created",
+      "name": "Webhook - Pedido Criado",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "order-created"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.event}}",
+              "operation": "equal",
+              "value2": "order.created"
+            }
+          ]
+        }
+      },
+      "id": "if-order-created",
+      "name": "Se Pedido Criado",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "subject": "Novo Pedido #{{$json.order.id}} - PowerChip",
+        "emailType": "html",
+        "message": "<h2>Novo Pedido Recebido!</h2><p><strong>Pedido:</strong> #{{$json.order.id}}</p><p><strong>Cliente:</strong> {{$json.order.user.name}}</p><p><strong>Email:</strong> {{$json.order.user.email}}</p><p><strong>Valor Total:</strong> R$ {{$json.order.totalAmount}}</p><p><strong>Status:</strong> {{$json.order.status}}</p><p><strong>Data:</strong> {{$json.order.createdAt}}</p><hr><h3>Itens do Pedido:</h3><ul>{{#each $json.order.items}}<li>{{this.product.name}} - Qtd: {{this.quantity}} - R$ {{this.price}}</li>{{/each}}</ul>",
+        "options": {
+          "appendAttribution": false
+        },
+        "fromEmail": "noreply@powerchip.com.br",
+        "toEmail": "admin@powerchip.com.br"
+      },
+      "id": "email-admin-new-order",
+      "name": "Email Admin - Novo Pedido",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "subject": "Pedido Confirmado #{{$json.order.id}} - PowerChip",
+        "emailType": "html",
+        "message": "<h2>Obrigado pela sua compra!</h2><p>Olá {{$json.order.user.name}},</p><p>Seu pedido foi confirmado e está sendo processado.</p><p><strong>Pedido:</strong> #{{$json.order.id}}</p><p><strong>Valor Total:</strong> R$ {{$json.order.totalAmount}}</p><p><strong>Status:</strong> {{$json.order.status}}</p><p>Você receberá atualizações sobre o status do seu pedido por email.</p><p>Obrigado por escolher a PowerChip!</p>",
+        "options": {
+          "appendAttribution": false
+        },
+        "fromEmail": "noreply@powerchip.com.br",
+        "toEmail": "={{$json.order.user.email}}"
+      },
+      "id": "email-customer-confirmation",
+      "name": "Email Cliente - Confirmação",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"status\": \"success\", \"message\": \"Automation executed\"}"
+      },
+      "id": "respond-success",
+      "name": "Resposta Sucesso",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "payment-status",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-payment-status",
+      "name": "Webhook - Status Pagamento",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 600],
+      "webhookId": "payment-status"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.status}}",
+              "operation": "equal",
+              "value2": "approved"
+            }
+          ]
+        }
+      },
+      "id": "if-payment-approved",
+      "name": "Se Pagamento Aprovado",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 600]
+    },
+    {
+      "parameters": {
+        "subject": "Pagamento Aprovado - Pedido #{{$json.order.id}}",
+        "emailType": "html",
+        "message": "<h2>Pagamento Aprovado!</h2><p>Olá {{$json.order.user.name}},</p><p>Seu pagamento foi aprovado com sucesso!</p><p><strong>Pedido:</strong> #{{$json.order.id}}</p><p><strong>Valor:</strong> R$ {{$json.amount}}</p><p><strong>Método:</strong> {{$json.paymentMethod}}</p><p>Seu pedido já está sendo preparado para envio.</p>",
+        "fromEmail": "noreply@powerchip.com.br",
+        "toEmail": "={{$json.order.user.email}}"
+      },
+      "id": "email-payment-approved",
+      "name": "Email - Pagamento Aprovado",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [680, 600]
+    }
+  ],
+  "connections": {
+    "webhook-order-created": {
+      "main": [
+        [
+          {
+            "node": "if-order-created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if-order-created": {
+      "main": [
+        [
+          {
+            "node": "email-admin-new-order",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "email-customer-confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email-admin-new-order": {
+      "main": [
+        [
+          {
+            "node": "respond-success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email-customer-confirmation": {
+      "main": [
+        [
+          {
+            "node": "respond-success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "webhook-payment-status": {
+      "main": [
+        [
+          {
+            "node": "if-payment-approved",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if-payment-approved": {
+      "main": [
+        [
+          {
+            "node": "email-payment-approved",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "timezone": "America/Sao_Paulo"
+  },
+  "versionId": "1"
+}

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Carrinho - Teste de Autenticação</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        .login-section { background: #fff3cd; border-color: #ffeaa7; padding: 20px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug do Carrinho - Teste de Autenticação</h1>
+        
+        <div class="login-section">
+            <h2>⚠️ IMPORTANTE: Faça Login Primeiro</h2>
+            <p>Para testar o carrinho, você precisa estar logado. Clique no botão abaixo para ir para a página de login:</p>
+            <button onclick="window.open('/auth/signin', '_blank')">🔐 Ir para Login</button>
+            <button onclick="window.open('/auth/signup', '_blank')">📝 Criar Conta</button>
+        </div>
+
+        <div class="section info">
+            <h2>1. Verificar Status da Sessão</h2>
+            <button onclick="checkSession()">🔍 Verificar Sessão</button>
+            <div id="session-result"></div>
+        </div>
+
+        <div class="section info">
+            <h2>2. Buscar Produtos Disponíveis</h2>
+            <button onclick="fetchProducts()">📦 Buscar Produtos</button>
+            <div id="products-result"></div>
+        </div>
+
+        <div class="section info">
+            <h2>3. Testar Adicionar ao Carrinho (COM LOGIN)</h2>
+            <p>Primeiro faça login, depois teste:</p>
+            <input type="text" id="test-product-id" placeholder="ID do produto" style="padding: 8px; margin: 5px;">
+            <input type="number" id="test-quantity" value="1" min="1" style="padding: 8px; margin: 5px; width: 60px;">
+            <button onclick="testAddToCart()">🛒 Adicionar ao Carrinho</button>
+            <div id="cart-test-result"></div>
+        </div>
+
+        <div class="section info">
+            <h2>4. Verificar Carrinho Atual</h2>
+            <button onclick="checkCart()">👀 Ver Carrinho</button>
+            <div id="cart-result"></div>
+        </div>
+
+        <div class="section info">
+            <h2>5. Teste Completo Automatizado</h2>
+            <button onclick="runFullTest()">🚀 Executar Teste Completo</button>
+            <div id="full-test-result"></div>
+        </div>
+    </div>
+
+    <script>
+        async function checkSession() {
+            const resultDiv = document.getElementById('session-result');
+            resultDiv.innerHTML = '<p>Verificando sessão...</p>';
+            
+            try {
+                const response = await fetch('/api/auth/session');
+                const session = await response.json();
+                
+                if (session && session.user) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Usuário Logado</h3>
+                            <pre>${JSON.stringify(session, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Usuário NÃO Logado</h3>
+                            <p>Você precisa fazer login primeiro!</p>
+                            <pre>${JSON.stringify(session, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro ao verificar sessão</h3>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function fetchProducts() {
+            const resultDiv = document.getElementById('products-result');
+            resultDiv.innerHTML = '<p>Buscando produtos...</p>';
+            
+            try {
+                const response = await fetch('/api/products?limit=5');
+                const data = await response.json();
+                
+                if (data.products && data.products.length > 0) {
+                    const firstProduct = data.products[0];
+                    document.getElementById('test-product-id').value = firstProduct.id;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Produtos encontrados</h3>
+                            <p>Primeiro produto ID: <strong>${firstProduct.id}</strong></p>
+                            <p>Nome: ${firstProduct.name}</p>
+                            <p>Preço: R$ ${firstProduct.price}</p>
+                            <pre>${JSON.stringify(data.products.slice(0, 2), null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Nenhum produto encontrado</h3>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro ao buscar produtos</h3>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function testAddToCart() {
+            const resultDiv = document.getElementById('cart-test-result');
+            const productId = document.getElementById('test-product-id').value;
+            const quantity = parseInt(document.getElementById('test-quantity').value);
+            
+            if (!productId) {
+                resultDiv.innerHTML = '<div class="error">❌ Por favor, insira um ID de produto</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p>Testando adicionar ao carrinho...</p>';
+            
+            try {
+                const response = await fetch('/api/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        productId: productId,
+                        quantity: quantity
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Produto adicionado com sucesso!</h3>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro ao adicionar produto</h3>
+                            <p>Status: ${response.status}</p>
+                            <p>Erro: ${data.error}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro na requisição</h3>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function checkCart() {
+            const resultDiv = document.getElementById('cart-result');
+            resultDiv.innerHTML = '<p>Verificando carrinho...</p>';
+            
+            try {
+                const response = await fetch('/api/cart');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Carrinho carregado</h3>
+                            <p>Itens no carrinho: ${data.items ? data.items.length : 0}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Erro ao carregar carrinho</h3>
+                            <p>Status: ${response.status}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Erro na requisição</h3>
+                        <pre>${error.message}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        async function runFullTest() {
+            const resultDiv = document.getElementById('full-test-result');
+            resultDiv.innerHTML = '<h3>🚀 Executando teste completo...</h3>';
+            
+            let results = [];
+            
+            // 1. Verificar sessão
+            try {
+                const sessionResponse = await fetch('/api/auth/session');
+                const session = await sessionResponse.json();
+                
+                if (session && session.user) {
+                    results.push('✅ Sessão: Usuário logado');
+                } else {
+                    results.push('❌ Sessão: Usuário NÃO logado - PARE AQUI E FAÇA LOGIN!');
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Teste Interrompido</h3>
+                            <p>Você precisa fazer login primeiro!</p>
+                            <button onclick="window.open('/auth/signin', '_blank')">🔐 Fazer Login</button>
+                        </div>
+                    `;
+                    return;
+                }
+            } catch (error) {
+                results.push(`❌ Erro na sessão: ${error.message}`);
+            }
+            
+            // 2. Buscar produtos
+            try {
+                const productsResponse = await fetch('/api/products?limit=1');
+                const productsData = await productsResponse.json();
+                
+                if (productsData.products && productsData.products.length > 0) {
+                    const testProduct = productsData.products[0];
+                    results.push(`✅ Produtos: Encontrado produto ${testProduct.id}`);
+                    
+                    // 3. Testar adicionar ao carrinho
+                    try {
+                        const cartResponse = await fetch('/api/cart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                productId: testProduct.id,
+                                quantity: 1
+                            })
+                        });
+                        
+                        const cartData = await cartResponse.json();
+                        
+                        if (cartResponse.ok) {
+                            results.push('✅ Carrinho: Produto adicionado com sucesso!');
+                        } else {
+                            results.push(`❌ Carrinho: ${cartData.error} (Status: ${cartResponse.status})`);
+                        }
+                    } catch (error) {
+                        results.push(`❌ Erro ao adicionar ao carrinho: ${error.message}`);
+                    }
+                } else {
+                    results.push('❌ Produtos: Nenhum produto encontrado');
+                }
+            } catch (error) {
+                results.push(`❌ Erro ao buscar produtos: ${error.message}`);
+            }
+            
+            // Mostrar resultados
+            const hasErrors = results.some(r => r.startsWith('❌'));
+            resultDiv.innerHTML = `
+                <div class="${hasErrors ? 'error' : 'success'}">
+                    <h3>${hasErrors ? '❌' : '✅'} Resultado do Teste Completo</h3>
+                    <ul>
+                        ${results.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Executar verificação de sessão automaticamente
+        window.onload = function() {
+            checkSession();
+        };
+    </script>
+</body>
+</html>

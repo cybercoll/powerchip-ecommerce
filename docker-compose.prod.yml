@@ -1,0 +1,253 @@
+version: '3.8'
+
+services:
+  # Aplicação Next.js
+  powerchip-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: powerchip-ecommerce
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - MERCADOPAGO_ACCESS_TOKEN=${MERCADOPAGO_ACCESS_TOKEN}
+      - MERCADOPAGO_PUBLIC_KEY=${MERCADOPAGO_PUBLIC_KEY}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
+    networks:
+      - powerchip-network
+    depends_on:
+      - redis
+    volumes:
+      - app-logs:/app/logs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.powerchip.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.powerchip.tls=true"
+      - "traefik.http.routers.powerchip.tls.certresolver=letsencrypt"
+      - "traefik.http.services.powerchip.loadbalancer.server.port=3000"
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: powerchip-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx-logs:/var/log/nginx
+    networks:
+      - powerchip-network
+    depends_on:
+      - powerchip-app
+    labels:
+      - "traefik.enable=false"
+
+  # Redis para cache e sessões
+  redis:
+    image: redis:7-alpine
+    container_name: powerchip-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    networks:
+      - powerchip-network
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
+  # N8N para automações
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: powerchip-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
+      - N8N_HOST=${N8N_DOMAIN}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://${N8N_DOMAIN}/
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - N8N_METRICS=true
+      - N8N_LOG_LEVEL=info
+      - DB_TYPE=sqlite
+      - ECOMMERCE_API_URL=http://powerchip-app:3000
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - MERCADOPAGO_ACCESS_TOKEN=${MERCADOPAGO_ACCESS_TOKEN}
+    volumes:
+      - n8n-data:/home/node/.n8n
+      - ./n8n/workflows:/home/node/.n8n/workflows
+      - ./n8n/credentials:/home/node/.n8n/credentials
+    networks:
+      - powerchip-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.rule=Host(`${N8N_DOMAIN}`)"
+      - "traefik.http.routers.n8n.tls=true"
+      - "traefik.http.routers.n8n.tls.certresolver=letsencrypt"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+
+  # Traefik para SSL e Load Balancing
+  traefik:
+    image: traefik:v2.10
+    container_name: powerchip-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    command:
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --log.level=INFO
+      - --accesslog=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-data:/letsencrypt
+      - traefik-logs:/var/log/traefik
+    networks:
+      - powerchip-network
+    environment:
+      - TRAEFIK_API_DASHBOARD=true
+
+  # Monitoring com Prometheus (opcional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: powerchip-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - powerchip-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    profiles:
+      - monitoring
+
+  # Grafana para visualização (opcional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: powerchip-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - powerchip-network
+    profiles:
+      - monitoring
+
+  # Backup automático
+  backup:
+    image: alpine:latest
+    container_name: powerchip-backup
+    restart: unless-stopped
+    volumes:
+      - app-logs:/backup/logs:ro
+      - redis-data:/backup/redis:ro
+      - n8n-data:/backup/n8n:ro
+      - ./backups:/backup/output
+    environment:
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 2 * * *}
+      - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-30}
+      - S3_BUCKET=${S3_BACKUP_BUCKET}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    command: |
+      sh -c '
+        apk add --no-cache dcron aws-cli tar gzip
+        echo "$${BACKUP_SCHEDULE} /backup-script.sh" | crontab -
+        cat > /backup-script.sh << EOF
+        #!/bin/sh
+        DATE=$$(date +%Y%m%d_%H%M%S)
+        BACKUP_DIR="/backup/output/$$DATE"
+        mkdir -p "$$BACKUP_DIR"
+        
+        # Backup logs
+        tar -czf "$$BACKUP_DIR/logs.tar.gz" -C /backup/logs .
+        
+        # Backup Redis (se necessário)
+        if [ -d "/backup/redis" ]; then
+          tar -czf "$$BACKUP_DIR/redis.tar.gz" -C /backup/redis .
+        fi
+        
+        # Backup N8N
+        tar -czf "$$BACKUP_DIR/n8n.tar.gz" -C /backup/n8n .
+        
+        # Upload para S3 (se configurado)
+        if [ -n "$$S3_BUCKET" ]; then
+          aws s3 sync "$$BACKUP_DIR" "s3://$$S3_BUCKET/powerchip-backups/$$DATE/"
+        fi
+        
+        # Limpar backups antigos
+        find /backup/output -type d -mtime +$$BACKUP_RETENTION_DAYS -exec rm -rf {} +
+        
+        echo "Backup completed: $$DATE"
+      EOF
+        chmod +x /backup-script.sh
+        crond -f
+      '
+    networks:
+      - powerchip-network
+    profiles:
+      - backup
+
+volumes:
+  app-logs:
+    driver: local
+  nginx-logs:
+    driver: local
+  redis-data:
+    driver: local
+  n8n-data:
+    driver: local
+  traefik-data:
+    driver: local
+  traefik-logs:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  powerchip-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

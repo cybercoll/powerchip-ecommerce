@@ -1,0 +1,30 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#f3f4f6"/>
+  
+  <!-- Border -->
+  <rect x="10" y="10" width="180" height="180" rx="8" fill="none" stroke="#d1d5db" stroke-width="2" stroke-dasharray="5,5"/>
+  
+  <!-- Icon -->
+  <g transform="translate(100, 100)">
+    <!-- Box outline -->
+    <rect x="-30" y="-25" width="60" height="50" rx="4" fill="none" stroke="#9ca3af" stroke-width="2"/>
+    
+    <!-- Box top -->
+    <path d="M-30 -25 L0 -40 L30 -25 L30 25 L0 40 L-30 25 Z" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2"/>
+    
+    <!-- Box front -->
+    <rect x="-30" y="-25" width="60" height="50" rx="4" fill="#f9fafb" stroke="#9ca3af" stroke-width="2"/>
+    
+    <!-- Package lines -->
+    <line x1="-20" y1="-15" x2="20" y2="-15" stroke="#d1d5db" stroke-width="1"/>
+    <line x1="-20" y1="0" x2="20" y2="0" stroke="#d1d5db" stroke-width="1"/>
+    <line x1="-20" y1="15" x2="20" y2="15" stroke="#d1d5db" stroke-width="1"/>
+    
+    <line x1="0" y1="-25" x2="0" y2="25" stroke="#d1d5db" stroke-width="1"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="100" y="140" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="12" font-weight="500">Imagem do Produto</text>
+  <text x="100" y="155" text-anchor="middle" fill="#9ca3af" font-family="Arial, sans-serif" font-size="10">Placeholder</text>
+</svg>

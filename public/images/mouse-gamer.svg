@@ -1,0 +1,129 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mouse Body Shadow -->
+  <ellipse cx="202" cy="152" rx="65" ry="95" fill="#000" opacity="0.1"/>
+  
+  <!-- Main Mouse Body -->
+  <ellipse cx="200" cy="150" rx="60" ry="90" fill="#1a1a1a"/>
+  <ellipse cx="200" cy="150" rx="55" ry="85" fill="#2a2a2a"/>
+  
+  <!-- Mouse Top Surface -->
+  <ellipse cx="200" cy="140" rx="50" ry="75" fill="#333"/>
+  <ellipse cx="200" cy="135" rx="45" ry="70" fill="#404040"/>
+  
+  <!-- Left Click Button -->
+  <path d="M155 80 Q175 75 200 80 L200 140 Q175 145 155 140 Z" fill="#4a4a4a" stroke="#555" stroke-width="1"/>
+  <path d="M160 85 Q175 82 195 85 L195 135 Q175 138 160 135 Z" fill="#525252"/>
+  
+  <!-- Right Click Button -->
+  <path d="M200 80 Q225 75 245 80 L245 140 Q225 145 200 140 Z" fill="#4a4a4a" stroke="#555" stroke-width="1"/>
+  <path d="M205 85 Q225 82 240 85 L240 135 Q225 138 205 135 Z" fill="#525252"/>
+  
+  <!-- Scroll Wheel -->
+  <ellipse cx="200" cy="100" rx="8" ry="15" fill="#1a1a1a"/>
+  <ellipse cx="200" cy="100" rx="6" ry="12" fill="#333"/>
+  
+  <!-- Scroll Wheel Texture -->
+  <g opacity="0.6">
+    <line x1="200" y1="90" x2="200" y2="110" stroke="#666" stroke-width="0.5"/>
+    <line x1="197" y1="92" x2="197" y2="108" stroke="#666" stroke-width="0.5"/>
+    <line x1="203" y1="92" x2="203" y2="108" stroke="#666" stroke-width="0.5"/>
+  </g>
+  
+  <!-- DPI Buttons -->
+  <rect x="195" y="120" width="4" height="6" rx="2" fill="#ff4444"/>
+  <rect x="201" y="120" width="4" height="6" rx="2" fill="#4444ff"/>
+  
+  <!-- Side Buttons (Left) -->
+  <ellipse cx="150" cy="130" rx="8" ry="12" fill="#3a3a3a"/>
+  <ellipse cx="150" cy="130" rx="6" ry="10" fill="#4a4a4a"/>
+  
+  <ellipse cx="150" cy="150" rx="8" ry="12" fill="#3a3a3a"/>
+  <ellipse cx="150" cy="150" rx="6" ry="10" fill="#4a4a4a"/>
+  
+  <!-- RGB LED Strip -->
+  <path d="M160 160 Q200 170 240 160 Q240 180 200 190 Q160 180 160 160 Z" fill="url(#rgbGradient)" opacity="0.8"/>
+  
+  <!-- Mouse Sensor -->
+  <circle cx="200" cy="220" r="12" fill="#1a1a1a"/>
+  <circle cx="200" cy="220" r="8" fill="#ff0000" opacity="0.6"/>
+  <circle cx="200" cy="220" r="4" fill="#ff4444"/>
+  
+  <!-- Mouse Feet -->
+  <ellipse cx="170" cy="210" rx="8" ry="4" fill="#f0f0f0"/>
+  <ellipse cx="230" cy="210" rx="8" ry="4" fill="#f0f0f0"/>
+  <ellipse cx="200" cy="240" rx="6" ry="3" fill="#f0f0f0"/>
+  
+  <!-- Cable -->
+  <path d="M200 240 Q220 260 250 270 Q280 275 320 270" stroke="#1a1a1a" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M200 240 Q220 260 250 270 Q280 275 320 270" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- USB Connector -->
+  <rect x="315" y="267" width="15" height="6" rx="3" fill="#2a2a2a"/>
+  <rect x="317" y="268" width="11" height="4" rx="2" fill="#1a1a1a"/>
+  
+  <!-- Brand Logo -->
+  <text x="200" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#888">PowerChip</text>
+  <text x="200" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#666">GAMING</text>
+  
+  <!-- Ergonomic Grip Texture -->
+  <g opacity="0.3">
+    <path d="M155 120 Q165 125 155 130 Q165 135 155 140" stroke="#666" stroke-width="1" fill="none"/>
+    <path d="M245 120 Q235 125 245 130 Q235 135 245 140" stroke="#666" stroke-width="1" fill="none"/>
+  </g>
+  
+  <!-- Specifications -->
+  <text x="200" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#333">Mouse Gamer PowerChip Pro</text>
+  <text x="200" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#666">RGB • 16000 DPI • Ergonômico</text>
+  
+  <!-- Features Icons -->
+  <g transform="translate(50,80)">
+    <!-- DPI Icon -->
+    <circle cx="0" cy="0" r="15" fill="#007bff" opacity="0.1"/>
+    <text x="0" y="4" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#007bff">16K</text>
+    <text x="0" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#666">DPI</text>
+  </g>
+  
+  <g transform="translate(320,80)">
+    <!-- RGB Icon -->
+    <circle cx="0" cy="0" r="15" fill="url(#rgbGradient)" opacity="0.3"/>
+    <text x="0" y="4" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#333">RGB</text>
+    <text x="0" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#666">Lighting</text>
+  </g>
+  
+  <!-- Gaming Features -->
+  <rect x="50" y="200" width="100" height="60" rx="8" fill="#f8f9fa" opacity="0.8"/>
+  <text x="100" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#333">Características</text>
+  <text x="55" y="230" font-family="Arial, sans-serif" font-size="8" fill="#666">• 7 botões programáveis</text>
+  <text x="55" y="240" font-family="Arial, sans-serif" font-size="8" fill="#666">• Sensor óptico preciso</text>
+  <text x="55" y="250" font-family="Arial, sans-serif" font-size="8" fill="#666">• Design ergonômico</text>
+  
+  <!-- Performance Stats -->
+  <rect x="250" y="200" width="100" height="60" rx="8" fill="#28a745" opacity="0.1"/>
+  <text x="300" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#28a745">Performance</text>
+  <text x="255" y="230" font-family="Arial, sans-serif" font-size="8" fill="#28a745">• Polling: 1000Hz</text>
+  <text x="255" y="240" font-family="Arial, sans-serif" font-size="8" fill="#28a745">• Aceleração: 40G</text>
+  <text x="255" y="250" font-family="Arial, sans-serif" font-size="8" fill="#28a745">• Velocidade: 400 IPS</text>
+  
+  <!-- RGB Gradient Definition -->
+  <defs>
+    <linearGradient id="rgbGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
+      <stop offset="33%" style="stop-color:#00ff00;stop-opacity:1" />
+      <stop offset="66%" style="stop-color:#0000ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff0000;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="sensorGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ff4444;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#ff0000;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#ff0000;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Sensor Glow Effect -->
+  <circle cx="200" cy="220" r="20" fill="url(#sensorGlow)" opacity="0.5"/>
+  
+  <!-- Gaming Badge -->
+  <rect x="170" y="195" width="60" height="20" rx="10" fill="#dc3545" opacity="0.9"/>
+  <text x="200" y="208" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">GAMING</text>
+</svg>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test NextAuth Session</title>
+</head>
+<body>
+    <h1>NextAuth Session Test</h1>
+    <div id="result"></div>
+    <button onclick="testSession()">Test Session API</button>
+    <button onclick="testWithCredentials()">Test with Credentials</button>
+    
+    <script>
+        async function testSession() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <h3>Response:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Headers: ${JSON.stringify([...response.headers.entries()])}</p>
+                    <p>Data: ${JSON.stringify(data, null, 2)}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>Error:</h3>
+                    <p>${error.message}</p>
+                    <p>Stack: ${error.stack}</p>
+                `;
+            }
+        }
+        
+        async function testWithCredentials() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing with credentials...';
+            
+            try {
+                const response = await fetch('/api/auth/session', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <h3>Response with Credentials:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Headers: ${JSON.stringify([...response.headers.entries()])}</p>
+                    <p>Data: ${JSON.stringify(data, null, 2)}</p>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>Error with Credentials:</h3>
+                    <p>${error.message}</p>
+                    <p>Stack: ${error.stack}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

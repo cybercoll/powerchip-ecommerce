@@ -1,0 +1,34 @@
+import { withAuth } from "next-auth/middleware"
+
+export default withAuth(
+  // `withAuth` augments your `Request` with the user's token.
+  function middleware(req) {
+    // Add any additional middleware logic here if needed
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => {
+        // This callback is called to check if the user is authorized
+        // Return true to allow access, false to deny
+        return true // Allow all authenticated users for now
+      },
+    },
+  }
+)
+
+// Specify which routes should be protected
+export const config = {
+  matcher: [
+    // Protect admin routes
+    '/admin/:path*',
+    // Protect user dashboard/profile routes
+    '/profile/:path*',
+    '/orders/:path*',
+    // Protect API routes that require authentication
+    '/api/admin/:path*',
+    '/api/orders/:path*',
+    '/api/payments/:path*',
+    // Exclude NextAuth API routes from middleware protection
+    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)'
+  ]
+}

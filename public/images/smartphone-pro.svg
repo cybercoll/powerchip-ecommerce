@@ -1,0 +1,60 @@
+<svg width="400" height="600" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Phone Body -->
+  <rect x="20" y="20" width="360" height="560" rx="40" ry="40" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+  
+  <!-- Screen -->
+  <rect x="40" y="80" width="320" height="480" rx="20" ry="20" fill="#000"/>
+  
+  <!-- Screen Content -->
+  <rect x="50" y="90" width="300" height="460" rx="15" ry="15" fill="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"/>
+  
+  <!-- Notch -->
+  <rect x="160" y="40" width="80" height="25" rx="12" ry="12" fill="#000"/>
+  
+  <!-- Camera -->
+  <circle cx="180" cy="52" r="6" fill="#333"/>
+  <circle cx="180" cy="52" r="3" fill="#555"/>
+  
+  <!-- Speaker -->
+  <rect x="210" y="47" width="30" height="10" rx="5" ry="5" fill="#333"/>
+  
+  <!-- Home Button -->
+  <circle cx="200" cy="580" r="15" fill="#333" stroke="#555" stroke-width="1"/>
+  
+  <!-- Side Buttons -->
+  <rect x="10" y="150" width="8" height="40" rx="4" ry="4" fill="#333"/>
+  <rect x="10" y="200" width="8" height="60" rx="4" ry="4" fill="#333"/>
+  <rect x="382" y="180" width="8" height="80" rx="4" ry="4" fill="#333"/>
+  
+  <!-- Camera Module (Back) -->
+  <rect x="300" y="100" width="60" height="80" rx="15" ry="15" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+  
+  <!-- Triple Camera -->
+  <circle cx="320" cy="120" r="12" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="320" cy="120" r="8" fill="#1a1a1a"/>
+  <circle cx="320" cy="120" r="4" fill="#333"/>
+  
+  <circle cx="340" cy="140" r="10" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="340" cy="140" r="6" fill="#1a1a1a"/>
+  <circle cx="340" cy="140" r="3" fill="#333"/>
+  
+  <circle cx="320" cy="160" r="8" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="320" cy="160" r="5" fill="#1a1a1a"/>
+  <circle cx="320" cy="160" r="2" fill="#333"/>
+  
+  <!-- Flash -->
+  <circle cx="340" cy="120" r="4" fill="#fff" opacity="0.8"/>
+  
+  <!-- Brand Logo -->
+  <text x="200" y="540" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#666">PowerChip</text>
+  
+  <!-- Screen Reflection -->
+  <rect x="50" y="90" width="150" height="230" rx="15" ry="15" fill="url(#screenReflection)" opacity="0.3"/>
+  
+  <defs>
+    <linearGradient id="screenReflection" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+</svg>

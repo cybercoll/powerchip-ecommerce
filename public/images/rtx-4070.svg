@@ -1,0 +1,85 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gpuGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#76b900;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a7c00;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="fanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#333333;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111111;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heatsinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c0c0c0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#808080;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="300" fill="#f0f0f0"/>
+  
+  <!-- GPU Card PCB -->
+  <rect x="30" y="80" width="240" height="140" fill="url(#gpuGradient)" rx="8" ry="8" stroke="#3a5c00" stroke-width="2"/>
+  
+  <!-- Heatsink -->
+  <rect x="50" y="100" width="200" height="100" fill="url(#heatsinkGradient)" rx="5" ry="5" stroke="#606060" stroke-width="1"/>
+  
+  <!-- Cooling Fans -->
+  <g>
+    <!-- Fan 1 -->
+    <circle cx="100" cy="150" r="25" fill="url(#fanGradient)" stroke="#000" stroke-width="1"/>
+    <circle cx="100" cy="150" r="20" fill="none" stroke="#444" stroke-width="1"/>
+    <circle cx="100" cy="150" r="15" fill="none" stroke="#666" stroke-width="1"/>
+    <circle cx="100" cy="150" r="3" fill="#000"/>
+    
+    <!-- Fan blades -->
+    <g stroke="#333" stroke-width="2" fill="none">
+      <path d="M 100 135 Q 110 145 100 155 Q 90 145 100 135"/>
+      <path d="M 115 150 Q 105 160 95 150 Q 105 140 115 150"/>
+      <path d="M 100 165 Q 90 155 100 145 Q 110 155 100 165"/>
+      <path d="M 85 150 Q 95 140 105 150 Q 95 160 85 150"/>
+    </g>
+    
+    <!-- Fan 2 -->
+    <circle cx="200" cy="150" r="25" fill="url(#fanGradient)" stroke="#000" stroke-width="1"/>
+    <circle cx="200" cy="150" r="20" fill="none" stroke="#444" stroke-width="1"/>
+    <circle cx="200" cy="150" r="15" fill="none" stroke="#666" stroke-width="1"/>
+    <circle cx="200" cy="150" r="3" fill="#000"/>
+    
+    <!-- Fan blades -->
+    <g stroke="#333" stroke-width="2" fill="none">
+      <path d="M 200 135 Q 210 145 200 155 Q 190 145 200 135"/>
+      <path d="M 215 150 Q 205 160 195 150 Q 205 140 215 150"/>
+      <path d="M 200 165 Q 190 155 200 145 Q 210 155 200 165"/>
+      <path d="M 185 150 Q 195 140 205 150 Q 195 160 185 150"/>
+    </g>
+  </g>
+  
+  <!-- NVIDIA Logo Area -->
+  <rect x="60" y="110" width="80" height="20" fill="#000000" rx="2" ry="2"/>
+  <text x="100" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#76b900">NVIDIA</text>
+  
+  <!-- RTX Label -->
+  <text x="150" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">GeForce RTX</text>
+  <text x="150" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff">4070</text>
+  
+  <!-- PCI-E Connector -->
+  <rect x="25" y="120" width="8" height="60" fill="#ffd700" stroke="#cc9900" stroke-width="1" rx="2" ry="2"/>
+  
+  <!-- Power Connectors -->
+  <rect x="220" y="90" width="15" height="8" fill="#333" stroke="#000" stroke-width="1" rx="1" ry="1"/>
+  <rect x="240" y="90" width="15" height="8" fill="#333" stroke="#000" stroke-width="1" rx="1" ry="1"/>
+  
+  <!-- Display Ports -->
+  <g fill="#333" stroke="#000" stroke-width="1">
+    <rect x="250" y="110" width="8" height="6" rx="1" ry="1"/>
+    <rect x="250" y="120" width="8" height="6" rx="1" ry="1"/>
+    <rect x="250" y="130" width="8" height="6" rx="1" ry="1"/>
+    <rect x="250" y="140" width="12" height="8" rx="1" ry="1"/>
+  </g>
+  
+  <!-- Heat pipes -->
+  <g stroke="#888" stroke-width="2" fill="none">
+    <line x1="70" y1="105" x2="230" y2="105"/>
+    <line x1="70" y1="195" x2="230" y2="195"/>
+  </g>
+</svg>

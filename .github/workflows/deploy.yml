@@ -1,0 +1,362 @@
+name: PowerChip E-commerce - Deploy
+
+on:
+  push:
+    branches: [ main, production ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Run Tests
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run linting
+      run: npm run lint
+      
+    - name: Run type checking
+      run: npm run type-check
+      
+    - name: Run unit tests
+      run: npm run test
+      env:
+        NODE_ENV: test
+        
+    - name: Run build test
+      run: npm run build
+      env:
+        NODE_ENV: production
+        NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+        NEXTAUTH_URL: https://powerchip.com.br
+
+  security:
+    runs-on: ubuntu-latest
+    name: Security Scan
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+        
+    - name: Run npm audit
+      run: npm audit --audit-level=high
+      continue-on-error: true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    name: Build Docker Image
+    
+    outputs:
+      image: ${{ steps.image.outputs.image }}
+      digest: ${{ steps.build.outputs.digest }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+          
+    - name: Build and push Docker image
+      id: build
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        
+    - name: Output image
+      id: image
+      run: |
+        echo "image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    name: Deploy to Staging
+    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'staging'
+    environment:
+      name: staging
+      url: https://staging.powerchip.com.br
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.STAGING_SSH_KEY }}
+        
+    - name: Deploy to staging server
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} << 'EOF'
+          cd /opt/powerchip-ecommerce
+          
+          # Backup current version
+          ./scripts/deploy.sh backup
+          
+          # Pull latest changes
+          git pull origin main
+          
+          # Update environment variables
+          cp .env.staging .env
+          
+          # Deploy with new image
+          export DOCKER_IMAGE="${{ needs.build.outputs.image }}"
+          ./scripts/deploy.sh quick
+          
+          # Health check
+          sleep 30
+          if ! ./scripts/monitor.sh quick; then
+            echo "Health check failed, rolling back..."
+            ./scripts/deploy.sh rollback
+            exit 1
+          fi
+          
+          echo "Staging deployment successful!"
+        EOF
+        
+    - name: Run integration tests
+      run: |
+        # Wait for deployment to be ready
+        sleep 60
+        
+        # Run integration tests against staging
+        npm run test:integration
+      env:
+        TEST_BASE_URL: https://staging.powerchip.com.br
+        
+    - name: Notify deployment status
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        text: |
+          Staging deployment ${{ job.status }}!
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Image: ${{ needs.build.outputs.image }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [build, deploy-staging]
+    name: Deploy to Production
+    if: github.ref == 'refs/heads/production' || github.event.inputs.environment == 'production'
+    environment:
+      name: production
+      url: https://powerchip.com.br
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.PRODUCTION_SSH_KEY }}
+        
+    - name: Deploy to production server
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USER }}@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+          cd /opt/powerchip-ecommerce
+          
+          # Backup current version
+          ./scripts/deploy.sh backup
+          
+          # Pull latest changes
+          git pull origin production
+          
+          # Update environment variables
+          cp .env.production .env
+          
+          # Deploy with new image
+          export DOCKER_IMAGE="${{ needs.build.outputs.image }}"
+          ./scripts/deploy.sh deploy
+          
+          # Extended health check for production
+          sleep 60
+          if ! ./scripts/monitor.sh full; then
+            echo "Health check failed, rolling back..."
+            ./scripts/deploy.sh rollback
+            exit 1
+          fi
+          
+          # Warm up the application
+          curl -f https://powerchip.com.br > /dev/null
+          curl -f https://powerchip.com.br/api/health > /dev/null
+          
+          echo "Production deployment successful!"
+        EOF
+        
+    - name: Run smoke tests
+      run: |
+        # Wait for deployment to be fully ready
+        sleep 120
+        
+        # Run smoke tests against production
+        npm run test:smoke
+      env:
+        TEST_BASE_URL: https://powerchip.com.br
+        
+    - name: Update deployment status
+      uses: deployments/actions@v1
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+        
+    - name: Notify deployment status
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        text: |
+          🚀 Production deployment ${{ job.status }}!
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Image: ${{ needs.build.outputs.image }}
+          URL: https://powerchip.com.br
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    name: Cleanup
+    if: always()
+    
+    steps:
+    - name: Delete old images
+      uses: actions/delete-package-versions@v4
+      with:
+        package-name: ${{ env.IMAGE_NAME }}
+        package-type: 'container'
+        min-versions-to-keep: 10
+        delete-only-untagged-versions: 'true'
+
+  notify-failure:
+    runs-on: ubuntu-latest
+    needs: [test, security, build, deploy-staging, deploy-production]
+    name: Notify Failure
+    if: failure()
+    
+    steps:
+    - name: Notify failure
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        channel: '#alerts'
+        text: |
+          ❌ Pipeline failed!
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Actor: ${{ github.actor }}
+          
+          Failed jobs:
+          ${{ join(needs.*.result, ', ') }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
+    - name: Create issue on failure
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Deployment failed for ${context.ref}`,
+            body: `
+              ## Deployment Failure Report
+              
+              **Branch:** ${context.ref}
+              **Commit:** ${context.sha}
+              **Actor:** ${context.actor}
+              **Workflow:** ${context.workflow}
+              **Run ID:** ${context.runId}
+              
+              **Failed Jobs:**
+              - Test: ${{ needs.test.result }}
+              - Security: ${{ needs.security.result }}
+              - Build: ${{ needs.build.result }}
+              - Deploy Staging: ${{ needs.deploy-staging.result }}
+              - Deploy Production: ${{ needs.deploy-production.result }}
+              
+              Please investigate and fix the issues.
+              
+              [View Workflow Run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            `,
+            labels: ['bug', 'deployment', 'urgent']
+          })

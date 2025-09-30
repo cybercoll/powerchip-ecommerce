@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Completo - Carrinho com Autenticação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+        .warning {
+            background: #fff3e0;
+            color: #f57c00;
+            border-left: 4px solid #f57c00;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            width: 200px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .step {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Teste Completo - Sistema de Carrinho</h1>
+        <p>Este teste verifica todo o fluxo: autenticação → adicionar ao carrinho → verificar carrinho</p>
+        
+        <div id="overall-status" class="status">Status: Iniciando testes...</div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 1: Verificar Status da Aplicação</h3>
+            <button onclick="checkAppStatus()">Verificar Servidor e APIs</button>
+            <div id="app-status-result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 2: Verificar Sessão Atual</h3>
+            <button onclick="checkSession()">Verificar Sessão</button>
+            <div id="session-result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 3: Listar Produtos Disponíveis</h3>
+            <button onclick="listProducts()">Buscar Produtos</button>
+            <div id="products-result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 4: Testar Carrinho SEM Autenticação</h3>
+            <p>Este teste deve falhar com erro 401 (Não autorizado)</p>
+            <div>
+                <label>Product ID:</label>
+                <input type="text" id="productId" placeholder="Será preenchido automaticamente" readonly>
+                <label>Quantidade:</label>
+                <input type="number" id="quantity" value="1" min="1">
+            </div>
+            <button onclick="testCartWithoutAuth()">Testar Sem Login</button>
+            <div id="no-auth-result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 5: Fazer Login (Simulação)</h3>
+            <p>⚠️ <strong>IMPORTANTE:</strong> Para testar com autenticação real, você precisa:</p>
+            <ol>
+                <li>Abrir uma nova aba e ir para <a href="http://localhost:3000/auth/signin" target="_blank">http://localhost:3000/auth/signin</a></li>
+                <li>Fazer login com suas credenciais</li>
+                <li>Voltar para esta aba e continuar os testes</li>
+            </ol>
+            <button onclick="window.open('http://localhost:3000/auth/signin', '_blank')">Abrir Página de Login</button>
+            <button onclick="checkSession()">Verificar Login Após Autenticação</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 6: Testar Carrinho COM Autenticação</h3>
+            <p>Este teste deve funcionar se você estiver logado</p>
+            <button onclick="testCartWithAuth()">Testar Com Login</button>
+            <div id="with-auth-result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 7: Verificar Carrinho</h3>
+            <button onclick="getCart()">Ver Itens no Carrinho</button>
+            <div id="cart-result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 8: Testes de Validação</h3>
+            <button onclick="runValidationTests()">Executar Testes de Validação</button>
+            <div id="validation-result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="step">
+            <h3>Passo 9: Teste Automático Completo</h3>
+            <button onclick="runFullTest()" id="fullTestBtn">Executar Teste Completo</button>
+            <div id="full-test-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentProductId = null;
+        let isLoggedIn = false;
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    credentials: 'include',
+                    ...options
+                });
+                
+                let data;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    data = { error: 'Resposta não é JSON válido' };
+                }
+                
+                return {
+                    status: response.status,
+                    ok: response.ok,
+                    data: data,
+                    url: url
+                };
+            } catch (error) {
+                return {
+                    status: 0,
+                    ok: false,
+                    error: error.message,
+                    url: url
+                };
+            }
+        }
+
+        function displayResult(elementId, result, title = '') {
+            const element = document.getElementById(elementId);
+            let className = 'result';
+            
+            if (result.ok) {
+                className += ' success';
+            } else if (result.status === 401) {
+                className += ' warning';
+            } else {
+                className += ' error';
+            }
+            
+            element.className = className;
+            
+            let content = '';
+            if (title) content += `=== ${title} ===\n`;
+            content += `Status: ${result.status}\n`;
+            content += `URL: ${result.url}\n`;
+            content += `Sucesso: ${result.ok}\n`;
+            if (result.error) content += `Erro: ${result.error}\n`;
+            content += `Resposta: ${JSON.stringify(result.data, null, 2)}`;
+            
+            element.textContent = content;
+        }
+
+        function updateOverallStatus(message, type = 'info') {
+            const element = document.getElementById('overall-status');
+            element.textContent = `Status: ${message}`;
+            element.className = `status ${type}`;
+        }
+
+        async function checkAppStatus() {
+            updateOverallStatus('Verificando status da aplicação...', 'warning');
+            
+            const tests = [
+                { name: 'Servidor Principal', url: 'http://localhost:3000' },
+                { name: 'API de Produtos', url: '/api/products?limit=1' },
+                { name: 'API de Sessão', url: '/api/auth/session' }
+            ];
+
+            let results = [];
+            for (const test of tests) {
+                const result = await makeRequest(test.url);
+                results.push({
+                    test: test.name,
+                    status: result.status,
+                    ok: result.ok,
+                    response: result.data
+                });
+            }
+            
+            displayResult('app-status-result', { ok: true, data: { tests: results } }, 'Status da Aplicação');
+            updateOverallStatus('Status da aplicação verificado', 'success');
+        }
+
+        async function checkSession() {
+            updateOverallStatus('Verificando sessão...', 'warning');
+            const result = await makeRequest('/api/auth/session');
+            
+            isLoggedIn = result.ok && result.data && result.data.user;
+            
+            displayResult('session-result', result, 'Verificação de Sessão');
+            
+            if (isLoggedIn) {
+                updateOverallStatus(`Usuário logado: ${result.data.user.email}`, 'success');
+            } else {
+                updateOverallStatus('Usuário não está logado', 'warning');
+            }
+        }
+
+        async function listProducts() {
+            updateOverallStatus('Buscando produtos...', 'warning');
+            const result = await makeRequest('/api/products?limit=5');
+            
+            if (result.ok && result.data.products && result.data.products.length > 0) {
+                currentProductId = result.data.products[0].id;
+                document.getElementById('productId').value = currentProductId;
+                updateOverallStatus(`${result.data.products.length} produtos encontrados`, 'success');
+            } else {
+                updateOverallStatus('Nenhum produto encontrado', 'error');
+            }
+            
+            displayResult('products-result', result, 'Lista de Produtos');
+        }
+
+        async function testCartWithoutAuth() {
+            if (!currentProductId) {
+                alert('Execute primeiro o teste de produtos para obter um ID válido');
+                return;
+            }
+
+            updateOverallStatus('Testando carrinho sem autenticação...', 'warning');
+            
+            const result = await makeRequest('/api/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productId: currentProductId,
+                    quantity: parseInt(document.getElementById('quantity').value)
+                })
+            });
+            
+            displayResult('no-auth-result', result, 'Teste Sem Autenticação');
+            
+            if (result.status === 401) {
+                updateOverallStatus('✅ Teste correto: API rejeitou requisição sem autenticação', 'success');
+            } else {
+                updateOverallStatus('❌ Erro: API deveria rejeitar requisição sem autenticação', 'error');
+            }
+        }
+
+        async function testCartWithAuth() {
+            if (!currentProductId) {
+                alert('Execute primeiro o teste de produtos para obter um ID válido');
+                return;
+            }
+
+            if (!isLoggedIn) {
+                alert('Você precisa estar logado para este teste. Faça login primeiro.');
+                return;
+            }
+
+            updateOverallStatus('Testando carrinho com autenticação...', 'warning');
+            
+            const result = await makeRequest('/api/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    productId: currentProductId,
+                    quantity: parseInt(document.getElementById('quantity').value)
+                })
+            });
+            
+            displayResult('with-auth-result', result, 'Teste Com Autenticação');
+            
+            if (result.ok) {
+                updateOverallStatus('✅ Produto adicionado ao carrinho com sucesso!', 'success');
+            } else {
+                updateOverallStatus(`❌ Erro ao adicionar ao carrinho: ${result.data.error}`, 'error');
+            }
+        }
+
+        async function getCart() {
+            updateOverallStatus('Verificando carrinho...', 'warning');
+            const result = await makeRequest('/api/cart');
+            displayResult('cart-result', result, 'Conteúdo do Carrinho');
+            
+            if (result.ok) {
+                const itemCount = result.data.length || 0;
+                updateOverallStatus(`Carrinho verificado: ${itemCount} itens`, 'success');
+            } else {
+                updateOverallStatus('Erro ao verificar carrinho', 'error');
+            }
+        }
+
+        async function runValidationTests() {
+            if (!currentProductId) {
+                alert('Execute primeiro o teste de produtos');
+                return;
+            }
+
+            updateOverallStatus('Executando testes de validação...', 'warning');
+            
+            const tests = [
+                {
+                    name: 'Sem productId',
+                    data: { quantity: 1 },
+                    expectedStatus: 400
+                },
+                {
+                    name: 'Sem quantity',
+                    data: { productId: currentProductId },
+                    expectedStatus: 400
+                },
+                {
+                    name: 'Quantity zero',
+                    data: { productId: currentProductId, quantity: 0 },
+                    expectedStatus: 400
+                },
+                {
+                    name: 'Quantity negativa',
+                    data: { productId: currentProductId, quantity: -1 },
+                    expectedStatus: 400
+                },
+                {
+                    name: 'ProductId inválido',
+                    data: { productId: 'invalid-id', quantity: 1 },
+                    expectedStatus: 404
+                }
+            ];
+
+            let results = [];
+            
+            for (const test of tests) {
+                const result = await makeRequest('/api/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(test.data)
+                });
+                
+                const passed = result.status === test.expectedStatus || (result.status === 401 && !isLoggedIn);
+                
+                results.push({
+                    test: test.name,
+                    expected: test.expectedStatus,
+                    actual: result.status,
+                    passed: passed,
+                    response: result.data
+                });
+            }
+            
+            displayResult('validation-result', { ok: true, data: { tests: results } }, 'Testes de Validação');
+            
+            const passedTests = results.filter(r => r.passed).length;
+            updateOverallStatus(`Validação: ${passedTests}/${results.length} testes passaram`, passedTests === results.length ? 'success' : 'warning');
+        }
+
+        async function runFullTest() {
+            const btn = document.getElementById('fullTestBtn');
+            btn.disabled = true;
+            btn.textContent = 'Executando...';
+            
+            try {
+                updateOverallStatus('Iniciando teste completo...', 'warning');
+                
+                await checkAppStatus();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                await checkSession();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                await listProducts();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                await testCartWithoutAuth();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                if (isLoggedIn) {
+                    await testCartWithAuth();
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    await getCart();
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                
+                await runValidationTests();
+                
+                updateOverallStatus('✅ Teste completo finalizado!', 'success');
+                
+                const summary = {
+                    timestamp: new Date().toISOString(),
+                    userLoggedIn: isLoggedIn,
+                    productId: currentProductId,
+                    message: 'Teste completo executado com sucesso'
+                };
+                
+                displayResult('full-test-result', { ok: true, data: summary }, 'Resumo do Teste Completo');
+                
+            } catch (error) {
+                updateOverallStatus(`❌ Erro no teste: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Executar Teste Completo';
+            }
+        }
+
+        // Executar verificações iniciais
+        window.onload = function() {
+            updateOverallStatus('Página carregada. Execute os testes.', 'info');
+            checkAppStatus();
+        };
+    </script>
+</body>
+</html>

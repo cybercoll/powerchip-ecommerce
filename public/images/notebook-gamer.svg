@@ -1,0 +1,184 @@
+<svg width="500" height="350" viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Laptop Base Shadow -->
+  <ellipse cx="252" cy="302" rx="180" ry="20" fill="#000" opacity="0.2"/>
+  
+  <!-- Laptop Base -->
+  <rect x="70" y="220" width="360" height="80" rx="15" ry="15" fill="#1a1a1a"/>
+  <rect x="75" y="225" width="350" height="70" rx="12" ry="12" fill="#2a2a2a"/>
+  
+  <!-- Keyboard Area -->
+  <rect x="85" y="235" width="330" height="50" rx="8" ry="8" fill="#333"/>
+  <rect x="90" y="240" width="320" height="40" rx="6" ry="6" fill="#404040"/>
+  
+  <!-- Individual Keys -->
+  <g opacity="0.8">
+    <!-- QWERTY Row -->
+    <rect x="100" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="115" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="130" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="145" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="160" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="175" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="190" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="205" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="220" y="245" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="235" y="245" width="12" height="8" rx="2" fill="#555"/>
+    
+    <!-- ASDF Row -->
+    <rect x="105" y="255" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="120" y="255" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="135" y="255" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="150" y="255" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="165" y="255" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="180" y="255" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="195" y="255" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="210" y="255" width="12" height="8" rx="2" fill="#555"/>
+    <rect x="225" y="255" width="12" height="8" rx="2" fill="#555"/>
+    
+    <!-- Space Bar -->
+    <rect x="140" y="265" width="80" height="8" rx="4" fill="#555"/>
+  </g>
+  
+  <!-- RGB Keyboard Backlight -->
+  <rect x="90" y="240" width="320" height="40" rx="6" ry="6" fill="url(#keyboardRGB)" opacity="0.3"/>
+  
+  <!-- Trackpad -->
+  <rect x="200" y="290" width="100" height="60" rx="8" ry="8" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+  <rect x="205" y="295" width="90" height="50" rx="6" ry="6" fill="#333"/>
+  
+  <!-- Power Button -->
+  <circle cx="380" cy="250" r="8" fill="#1a1a1a"/>
+  <circle cx="380" cy="250" r="6" fill="#00ff88" opacity="0.8"/>
+  <circle cx="380" cy="250" r="4" fill="#00cc66"/>
+  
+  <!-- Laptop Screen (Closed Position) -->
+  <rect x="70" y="50" width="360" height="170" rx="15" ry="15" fill="#1a1a1a"/>
+  <rect x="75" y="55" width="350" height="160" rx="12" ry="12" fill="#2a2a2a"/>
+  
+  <!-- Screen Bezel -->
+  <rect x="85" y="65" width="330" height="140" rx="8" ry="8" fill="#000"/>
+  
+  <!-- Screen Display -->
+  <rect x="90" y="70" width="320" height="130" rx="6" ry="6" fill="#111"/>
+  
+  <!-- Gaming Wallpaper/Interface -->
+  <rect x="95" y="75" width="310" height="120" rx="4" ry="4" fill="url(#gamingScreen)"/>
+  
+  <!-- Webcam -->
+  <circle cx="250" cy="62" r="4" fill="#333"/>
+  <circle cx="250" cy="62" r="2" fill="#1a1a1a"/>
+  
+  <!-- Brand Logo on Lid -->
+  <text x="250" y="140" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#888">PowerChip</text>
+  <text x="250" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">GAMING</text>
+  
+  <!-- Gaming Logo -->
+  <g transform="translate(220,120)">
+    <polygon points="0,0 10,0 15,8 10,16 0,16 -5,8" fill="#ff4444" opacity="0.8"/>
+    <polygon points="2,4 8,4 10,8 8,12 2,12 0,8" fill="#ff6666"/>
+  </g>
+  
+  <!-- Cooling Vents -->
+  <g opacity="0.6">
+    <rect x="80" y="280" width="30" height="3" rx="1" fill="#444"/>
+    <rect x="80" y="285" width="30" height="3" rx="1" fill="#444"/>
+    <rect x="80" y="290" width="30" height="3" rx="1" fill="#444"/>
+    
+    <rect x="390" y="280" width="30" height="3" rx="1" fill="#444"/>
+    <rect x="390" y="285" width="30" height="3" rx="1" fill="#444"/>
+    <rect x="390" y="290" width="30" height="3" rx="1" fill="#444"/>
+  </g>
+  
+  <!-- Ports -->
+  <!-- USB Ports -->
+  <rect x="65" y="260" width="8" height="4" rx="1" fill="#1a1a1a"/>
+  <rect x="65" y="270" width="8" height="4" rx="1" fill="#1a1a1a"/>
+  
+  <!-- HDMI Port -->
+  <rect x="435" y="265" width="10" height="5" rx="1" fill="#1a1a1a"/>
+  
+  <!-- Power Port -->
+  <circle cx="440" cy="280" r="4" fill="#1a1a1a"/>
+  
+  <!-- Specifications -->
+  <text x="250" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">Notebook PowerChip Gamer RTX</text>
+  <text x="250" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">RTX 4060 • Intel i7 • 16GB RAM • 512GB SSD</text>
+  
+  <!-- Performance Badges -->
+  <g transform="translate(50,100)">
+    <rect x="0" y="0" width="60" height="30" rx="8" fill="#28a745" opacity="0.9"/>
+    <text x="30" y="12" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white">RTX 4060</text>
+    <text x="30" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="white">Graphics</text>
+  </g>
+  
+  <g transform="translate(390,100)">
+    <rect x="0" y="0" width="60" height="30" rx="8" fill="#007bff" opacity="0.9"/>
+    <text x="30" y="12" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white">Intel i7</text>
+    <text x="30" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="white">Processor</text>
+  </g>
+  
+  <!-- Gaming Features -->
+  <rect x="50" y="320" width="120" height="25" rx="8" fill="#dc3545" opacity="0.1"/>
+  <text x="110" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc3545">144Hz Display</text>
+  
+  <rect x="180" y="320" width="120" height="25" rx="8" fill="#6f42c1" opacity="0.1"/>
+  <text x="240" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#6f42c1">RGB Keyboard</text>
+  
+  <rect x="310" y="320" width="120" height="25" rx="8" fill="#fd7e14" opacity="0.1"/>
+  <text x="370" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#fd7e14">Advanced Cooling</text>
+  
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="keyboardRGB" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff0000;stop-opacity:0.6" />
+      <stop offset="25%" style="stop-color:#ffff00;stop-opacity:0.6" />
+      <stop offset="50%" style="stop-color:#00ff00;stop-opacity:0.6" />
+      <stop offset="75%" style="stop-color:#0000ff;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#ff00ff;stop-opacity:0.6" />
+    </linearGradient>
+    
+    <linearGradient id="gamingScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#16213e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f3460;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="screenGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4444ff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#4444ff;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Screen Glow Effect -->
+  <rect x="90" y="70" width="320" height="130" rx="6" ry="6" fill="url(#screenGlow)"/>
+  
+  <!-- Gaming Interface Elements -->
+  <g opacity="0.7">
+    <!-- Crosshair -->
+    <g transform="translate(250,135)">
+      <circle cx="0" cy="0" r="15" fill="none" stroke="#00ff00" stroke-width="1"/>
+      <line x1="-10" y1="0" x2="10" y2="0" stroke="#00ff00" stroke-width="1"/>
+      <line x1="0" y1="-10" x2="0" y2="10" stroke="#00ff00" stroke-width="1"/>
+    </g>
+    
+    <!-- HUD Elements -->
+    <rect x="100" y="80" width="40" height="8" rx="2" fill="#00ff00" opacity="0.6"/>
+    <text x="120" y="86" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#fff">HP: 100</text>
+    
+    <rect x="100" y="90" width="30" height="8" rx="2" fill="#0088ff" opacity="0.6"/>
+    <text x="115" y="96" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#fff">MP: 75</text>
+    
+    <!-- Mini Map -->
+    <rect x="350" y="80" width="50" height="40" rx="4" fill="#000" opacity="0.8"/>
+    <rect x="355" y="85" width="40" height="30" rx="2" fill="#333" opacity="0.6"/>
+    <circle cx="375" cy="100" r="2" fill="#00ff00"/>
+  </g>
+  
+  <!-- Performance Indicators -->
+  <rect x="450" y="80" width="40" height="60" rx="8" fill="#000" opacity="0.8"/>
+  <text x="470" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#00ff00">FPS</text>
+  <text x="470" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#00ff00">144</text>
+  
+  <text x="470" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#ffff00">CPU: 45°C</text>
+  <text x="470" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#ffff00">GPU: 62°C</text>
+</svg>

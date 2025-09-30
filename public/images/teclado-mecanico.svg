@@ -1,0 +1,219 @@
+<svg width="600" height="250" viewBox="0 0 600 250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Keyboard Base Shadow -->
+  <ellipse cx="302" cy="202" rx="280" ry="15" fill="#000" opacity="0.2"/>
+  
+  <!-- Main Keyboard Body -->
+  <rect x="20" y="80" width="560" height="120" rx="15" ry="15" fill="#1a1a1a"/>
+  <rect x="25" y="85" width="550" height="110" rx="12" ry="12" fill="#2a2a2a"/>
+  
+  <!-- Keyboard Top Plate -->
+  <rect x="35" y="95" width="530" height="80" rx="8" ry="8" fill="#333"/>
+  <rect x="40" y="100" width="520" height="70" rx="6" ry="6" fill="#404040"/>
+  
+  <!-- Function Keys Row -->
+  <g opacity="0.9">
+    <rect x="50" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="80" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="110" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="140" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    
+    <rect x="180" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="210" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="240" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="270" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    
+    <rect x="310" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="340" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="370" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="400" y="105" width="25" height="12" rx="3" fill="#555" stroke="#666" stroke="stroke-width="0.5"/>
+  </g>
+  
+  <!-- Number Row -->
+  <g opacity="0.9">
+    <rect x="50" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="75" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="100" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="125" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="150" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="175" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="200" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="225" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="250" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="275" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="300" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="325" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="350" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="375" y="125" width="35" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+  </g>
+  
+  <!-- QWERTY Row -->
+  <g opacity="0.9">
+    <rect x="50" y="145" width="30" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="85" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="110" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="135" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="160" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="185" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="210" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="235" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="260" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="285" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="310" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="335" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="360" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="385" y="145" width="25" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+  </g>
+  
+  <!-- ASDF Row -->
+  <g opacity="0.9">
+    <rect x="50" y="165" width="35" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="90" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="115" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="140" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="165" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="190" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="215" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="240" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="265" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="290" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="315" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="340" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="365" y="165" width="45" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Bottom Row -->
+  <g opacity="0.9">
+    <rect x="50" y="185" width="45" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="100" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="125" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="150" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="175" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="200" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="225" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="250" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="275" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="300" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="325" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="350" y="185" width="60" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Space Bar Row -->
+  <g opacity="0.9">
+    <rect x="50" y="205" width="25" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="80" y="205" width="25" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="110" y="205" width="25" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="140" y="205" width="180" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="325" y="205" width="25" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="355" y="205" width="25" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="385" y="205" width="25" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Arrow Keys -->
+  <g opacity="0.9">
+    <rect x="450" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="475" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="500" y="185" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="475" y="205" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Numpad -->
+  <g opacity="0.9">
+    <rect x="450" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="475" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="500" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="525" y="125" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    
+    <rect x="450" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="475" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="500" y="145" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="525" y="145" width="20" height="35" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    
+    <rect x="450" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="475" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+    <rect x="500" y="165" width="20" height="15" rx="3" fill="#555" stroke="#666" stroke-width="0.5"/>
+  </g>
+  
+  <!-- RGB Underglow -->
+  <rect x="25" y="190" width="550" height="8" rx="4" fill="url(#rgbUnderglow)" opacity="0.8"/>
+  
+  <!-- Mechanical Switch Indicators -->
+  <g opacity="0.4">
+    <circle cx="95" cy="152" r="2" fill="#ff4444"/>
+    <circle cx="120" cy="152" r="2" fill="#44ff44"/>
+    <circle cx="145" cy="152" r="2" fill="#4444ff"/>
+    <circle cx="170" cy="152" r="2" fill="#ffff44"/>
+  </g>
+  
+  <!-- Key Labels -->
+  <g font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#ccc" text-anchor="middle">
+    <!-- WASD Keys Highlighted -->
+    <text x="95" y="152" fill="#ff6666">W</text>
+    <text x="100" y="172" fill="#ff6666">A</text>
+    <text x="125" y="172" fill="#ff6666">S</text>
+    <text x="150" y="172" fill="#ff6666">D</text>
+    
+    <!-- Function Keys -->
+    <text x="62" y="113">F1</text>
+    <text x="92" y="113">F2</text>
+    <text x="122" y="113">F3</text>
+    <text x="152" y="113">F4</text>
+  </g>
+  
+  <!-- Brand Logo -->
+  <text x="300" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#333">Teclado Mecânico PowerChip RGB</text>
+  <text x="300" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">Switches Mecânicos • RGB • Anti-Ghosting</text>
+  
+  <!-- Cable -->
+  <path d="M580 150 Q590 160 590 180 Q590 200 600 210" stroke="#1a1a1a" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M580 150 Q590 160 590 180 Q590 200 600 210" stroke="#333" stroke-width="4" fill="none" stroke-linecap="round"/>
+  
+  <!-- USB Connector -->
+  <rect x="595" y="207" width="15" height="6" rx="3" fill="#2a2a2a"/>
+  <rect x="597" y="208" width="11" height="4" rx="2" fill="#1a1a1a"/>
+  
+  <!-- Features -->
+  <g transform="translate(50,220)">
+    <rect x="0" y="0" width="100" height="25" rx="8" fill="#007bff" opacity="0.1"/>
+    <text x="50" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#007bff">Anti-Ghosting</text>
+  </g>
+  
+  <g transform="translate(170,220)">
+    <rect x="0" y="0" width="100" height="25" rx="8" fill="#28a745" opacity="0.1"/>
+    <text x="50" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#28a745">Switches Blue</text>
+  </g>
+  
+  <g transform="translate(290,220)">
+    <rect x="0" y="0" width="100" height="25" rx="8" fill="#dc3545" opacity="0.1"/>
+    <text x="50" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc3545">Macro Keys</text>
+  </g>
+  
+  <g transform="translate(410,220)">
+    <rect x="0" y="0" width="100" height="25" rx="8" fill="#6f42c1" opacity="0.1"/>
+    <text x="50" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#6f42c1">RGB Lighting</text>
+  </g>
+  
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="rgbUnderglow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
+      <stop offset="16%" style="stop-color:#ff8800;stop-opacity:1" />
+      <stop offset="33%" style="stop-color:#ffff00;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#00ff00;stop-opacity:1" />
+      <stop offset="66%" style="stop-color:#0088ff;stop-opacity:1" />
+      <stop offset="83%" style="stop-color:#0000ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8800ff;stop-opacity:1" />
+    </linearGradient>
+    
+    <radialGradient id="keyGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Key Backlighting Effect -->
+  <rect x="40" y="100" width="520" height="120" rx="6" ry="6" fill="url(#keyGlow)" opacity="0.2"/>
+  
+  <!-- Gaming Badge -->
+  <rect x="250" y="85" width="100" height="20" rx="10" fill="#ff4444" opacity="0.9"/>
+  <text x="300" y="98" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">GAMING</text>
+</svg>

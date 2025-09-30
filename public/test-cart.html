@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Carrinho</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste do Sistema de Carrinho</h1>
+    
+    <div class="test-section">
+        <h2>1. Verificar Sessão</h2>
+        <button onclick="checkSession()">Verificar Sessão Atual</button>
+        <div id="session-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Listar Produtos</h2>
+        <button onclick="listProducts()">Listar Produtos Disponíveis</button>
+        <div id="products-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Testar Carrinho</h2>
+        <button onclick="getCart()">Ver Carrinho Atual</button>
+        <button onclick="addToCart()">Adicionar Produto ao Carrinho</button>
+        <div id="cart-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Login de Teste</h2>
+        <button onclick="testLogin()">Fazer Login de Teste</button>
+        <div id="login-result"></div>
+    </div>
+
+    <script>
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        async function checkSession() {
+            try {
+                const response = await fetch('/api/auth/session');
+                const data = await response.json();
+                
+                if (data && data.user) {
+                    showResult('session-result', 
+                        `✅ Usuário logado: ${data.user.name || data.user.email} (ID: ${data.user.id})`, 
+                        'success'
+                    );
+                } else {
+                    showResult('session-result', 
+                        '❌ Nenhum usuário logado', 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('session-result', 
+                    `❌ Erro ao verificar sessão: ${error.message}`, 
+                    'error'
+                );
+            }
+        }
+
+        async function listProducts() {
+            try {
+                const response = await fetch('/api/products?limit=5');
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    const productList = data.map(p => 
+                        `<li>ID: ${p.id} - ${p.name} - R$ ${p.price} (Estoque: ${p.stock_quantity})</li>`
+                    ).join('');
+                    
+                    showResult('products-result', 
+                        `✅ Produtos encontrados:<ul>${productList}</ul>`, 
+                        'success'
+                    );
+                } else {
+                    showResult('products-result', 
+                        '❌ Nenhum produto encontrado', 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('products-result', 
+                    `❌ Erro ao listar produtos: ${error.message}`, 
+                    'error'
+                );
+            }
+        }
+
+        async function getCart() {
+            try {
+                const response = await fetch('/api/cart');
+                
+                if (response.status === 401) {
+                    showResult('cart-result', 
+                        '❌ Usuário não autenticado - faça login primeiro', 
+                        'error'
+                    );
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    if (data && data.length > 0) {
+                        const cartList = data.map(item => 
+                            `<li>${item.product.name} - Qtd: ${item.quantity} - R$ ${item.product.price}</li>`
+                        ).join('');
+                        
+                        showResult('cart-result', 
+                            `✅ Itens no carrinho:<ul>${cartList}</ul>`, 
+                            'success'
+                        );
+                    } else {
+                        showResult('cart-result', 
+                            '✅ Carrinho vazio', 
+                            'info'
+                        );
+                    }
+                } else {
+                    showResult('cart-result', 
+                        `❌ Erro: ${data.error || 'Erro desconhecido'}`, 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('cart-result', 
+                    `❌ Erro ao verificar carrinho: ${error.message}`, 
+                    'error'
+                );
+            }
+        }
+
+        async function addToCart() {
+            try {
+                // Primeiro, pegar um produto para testar
+                const productsResponse = await fetch('/api/products?limit=1');
+                const products = await productsResponse.json();
+                
+                if (!products || products.length === 0) {
+                    showResult('cart-result', 
+                        '❌ Nenhum produto disponível para teste', 
+                        'error'
+                    );
+                    return;
+                }
+                
+                const product = products[0];
+                
+                const response = await fetch('/api/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        productId: product.id,
+                        quantity: 1
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('cart-result', 
+                        `✅ Produto "${product.name}" adicionado ao carrinho com sucesso!`, 
+                        'success'
+                    );
+                } else {
+                    showResult('cart-result', 
+                        `❌ Erro ao adicionar: ${data.error || 'Erro desconhecido'} (Status: ${response.status})`, 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('cart-result', 
+                    `❌ Erro ao adicionar ao carrinho: ${error.message}`, 
+                    'error'
+                );
+            }
+        }
+
+        async function testLogin() {
+            try {
+                // Simular um login usando NextAuth
+                showResult('login-result', 
+                    '⚠️ Para fazer login, acesse: <a href="/auth/signin" target="_blank">/auth/signin</a>', 
+                    'info'
+                );
+            } catch (error) {
+                showResult('login-result', 
+                    `❌ Erro: ${error.message}`, 
+                    'error'
+                );
+            }
+        }
+
+        // Verificar sessão automaticamente ao carregar a página
+        window.onload = function() {
+            checkSession();
+        };
+    </script>
+</body>
+</html>

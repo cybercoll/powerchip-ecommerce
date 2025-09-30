@@ -1,0 +1,259 @@
+{
+  "name": "PowerChip Inventory Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "low-stock",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-low-stock",
+      "name": "Webhook - Estoque Baixo",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "low-stock"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.stock}}",
+              "operation": "smallerEqual",
+              "value2": "={{$json.minStock || 5}}"
+            }
+          ]
+        }
+      },
+      "id": "if-stock-low",
+      "name": "Se Estoque Baixo",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "subject": "⚠️ Estoque Baixo - {{$json.product.name}}",
+        "emailType": "html",
+        "message": "<h2>Alerta de Estoque Baixo</h2><p><strong>Produto:</strong> {{$json.product.name}}</p><p><strong>SKU:</strong> {{$json.product.id}}</p><p><strong>Estoque Atual:</strong> {{$json.stock}} unidades</p><p><strong>Estoque Mínimo:</strong> {{$json.minStock || 5}} unidades</p><p><strong>Categoria:</strong> {{$json.product.category}}</p><p><strong>Preço:</strong> R$ {{$json.product.price}}</p><p>⚠️ <strong>Ação necessária:</strong> Reabastecer estoque urgentemente!</p>",
+        "fromEmail": "alerts@powerchip.com.br",
+        "toEmail": "estoque@powerchip.com.br"
+      },
+      "id": "email-low-stock-alert",
+      "name": "Email - Alerta Estoque",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "product-review",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-product-review",
+      "name": "Webhook - Avaliação Produto",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 600],
+      "webhookId": "product-review"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.rating}}",
+              "operation": "smallerEqual",
+              "value2": 2
+            }
+          ]
+        }
+      },
+      "id": "if-bad-review",
+      "name": "Se Avaliação Ruim",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 600]
+    },
+    {
+      "parameters": {
+        "subject": "⭐ Avaliação Negativa - {{$json.product.name}}",
+        "emailType": "html",
+        "message": "<h2>Avaliação Negativa Recebida</h2><p><strong>Produto:</strong> {{$json.product.name}}</p><p><strong>Cliente:</strong> {{$json.user.name}} ({{$json.user.email}})</p><p><strong>Avaliação:</strong> {{$json.rating}}/5 estrelas</p><p><strong>Comentário:</strong></p><blockquote>{{$json.comment}}</blockquote><p><strong>Data:</strong> {{$json.createdAt}}</p><p>💡 <strong>Ação sugerida:</strong> Entrar em contato com o cliente para resolver possíveis problemas.</p>",
+        "fromEmail": "reviews@powerchip.com.br",
+        "toEmail": "atendimento@powerchip.com.br"
+      },
+      "id": "email-bad-review-alert",
+      "name": "Email - Avaliação Ruim",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [680, 600]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "daily-report",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-daily-report",
+      "name": "Webhook - Relatório Diário",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 900],
+      "webhookId": "daily-report"
+    },
+    {
+      "parameters": {
+        "url": "={{$json.ecommerceApiUrl}}/api/admin/reports/daily",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "httpHeaderAuth": {
+          "name": "Authorization",
+          "value": "Bearer {{$json.adminToken}}"
+        },
+        "options": {}
+      },
+      "id": "http-get-daily-stats",
+      "name": "Buscar Estatísticas Diárias",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 900]
+    },
+    {
+      "parameters": {
+        "subject": "📊 Relatório Diário PowerChip - {{$now.format('DD/MM/YYYY')}}",
+        "emailType": "html",
+        "message": "<h2>Relatório Diário - {{$now.format('DD/MM/YYYY')}}</h2><h3>📈 Vendas</h3><ul><li><strong>Pedidos:</strong> {{$json.orders.total}}</li><li><strong>Receita:</strong> R$ {{$json.revenue.total}}</li><li><strong>Ticket Médio:</strong> R$ {{$json.revenue.average}}</li></ul><h3>👥 Clientes</h3><ul><li><strong>Novos Cadastros:</strong> {{$json.customers.new}}</li><li><strong>Total Ativo:</strong> {{$json.customers.active}}</li></ul><h3>📦 Produtos</h3><ul><li><strong>Mais Vendidos:</strong> {{$json.products.topSelling}}</li><li><strong>Estoque Baixo:</strong> {{$json.products.lowStock}}</li></ul><h3>💳 Pagamentos</h3><ul><li><strong>PIX:</strong> {{$json.payments.pix}}%</li><li><strong>Cartão:</strong> {{$json.payments.card}}%</li><li><strong>Boleto:</strong> {{$json.payments.boleto}}%</li></ul>",
+        "fromEmail": "reports@powerchip.com.br",
+        "toEmail": "admin@powerchip.com.br"
+      },
+      "id": "email-daily-report",
+      "name": "Email - Relatório Diário",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [680, 900]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"status\": \"success\", \"message\": \"Automation completed\"}"
+      },
+      "id": "respond-success",
+      "name": "Resposta Sucesso",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [900, 600]
+    }
+  ],
+  "connections": {
+    "webhook-low-stock": {
+      "main": [
+        [
+          {
+            "node": "if-stock-low",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if-stock-low": {
+      "main": [
+        [
+          {
+            "node": "email-low-stock-alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email-low-stock-alert": {
+      "main": [
+        [
+          {
+            "node": "respond-success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "webhook-product-review": {
+      "main": [
+        [
+          {
+            "node": "if-bad-review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if-bad-review": {
+      "main": [
+        [
+          {
+            "node": "email-bad-review-alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email-bad-review-alert": {
+      "main": [
+        [
+          {
+            "node": "respond-success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "webhook-daily-report": {
+      "main": [
+        [
+          {
+            "node": "http-get-daily-stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "http-get-daily-stats": {
+      "main": [
+        [
+          {
+            "node": "email-daily-report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email-daily-report": {
+      "main": [
+        [
+          {
+            "node": "respond-success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "timezone": "America/Sao_Paulo"
+  },
+  "versionId": "1"
+}
