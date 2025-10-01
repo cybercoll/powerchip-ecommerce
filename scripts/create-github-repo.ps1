@@ -1,4 +1,4 @@
-# Script para criar repositório no GitHub - PowerChip E-commerce
+# Script para criar repositorio no GitHub - PowerChip E-commerce
 param(
     [string]$Token = $env:GITHUB_TOKEN
 )
@@ -21,20 +21,20 @@ function Write-Error-Custom {
     Write-Host "[ERROR] $Message" -ForegroundColor Red
 }
 
-Write-Host "Criador de Repositório GitHub - PowerChip E-commerce" -ForegroundColor Green
+Write-Host "Criador de Repositorio GitHub - PowerChip E-commerce" -ForegroundColor Green
 Write-Host "====================================================" -ForegroundColor Green
 
 if (-not $Token) {
-    Write-Error-Custom "Personal Access Token não fornecido!"
+    Write-Error-Custom "Personal Access Token nao fornecido!"
     Write-Host "Execute: `$env:GITHUB_TOKEN = 'seu_token_aqui'" -ForegroundColor Yellow
     Write-Host "Ou crie manualmente em: https://github.com/new" -ForegroundColor Yellow
     exit 1
 }
 
 try {
-    Write-Info "Criando repositório '$REPO_NAME' no GitHub..."
+    Write-Info "Criando repositorio '$REPO_NAME' no GitHub..."
     
-    # Dados do repositório
+    # Dados do repositorio
     $repoData = @{
         name = $REPO_NAME
         description = "Sistema completo de e-commerce - PowerChip"
@@ -42,7 +42,7 @@ try {
         auto_init = $false
     } | ConvertTo-Json -Depth 3
     
-    # Headers para autenticação
+    # Headers para autenticacao
     $headers = @{
         "Authorization" = "Bearer $Token"
         "Accept" = "application/vnd.github.v3+json"
@@ -50,10 +50,10 @@ try {
         "Content-Type" = "application/json"
     }
     
-    # Criar repositório
+    # Criar repositorio
     $response = Invoke-RestMethod -Uri "https://api.github.com/user/repos" -Method POST -Body $repoData -Headers $headers
     
-    Write-Success "Repositório '$REPO_NAME' criado com sucesso!"
+    Write-Success "Repositorio '$REPO_NAME' criado com sucesso!"
     Write-Info "URL: $($response.html_url)"
     Write-Info "Clone URL: $($response.clone_url)"
     
@@ -76,13 +76,13 @@ try {
     
     Write-Success "Push realizado com sucesso!"
     Write-Host ""
-    Write-Host "=== REPOSITÓRIO CRIADO COM SUCESSO ===" -ForegroundColor Green
+    Write-Host "=== REPOSITORIO CRIADO COM SUCESSO ===" -ForegroundColor Green
     Write-Host "URL: $($response.html_url)" -ForegroundColor Cyan
-    Write-Host "Acesse o link acima para ver seu código no GitHub!" -ForegroundColor Cyan
+    Write-Host "Acesse o link acima para ver seu codigo no GitHub!" -ForegroundColor Cyan
     
 } catch {
     if ($_.Exception.Message -like "*422*" -or $_.Exception.Message -like "*already exists*") {
-        Write-Success "Repositório '$REPO_NAME' já existe!"
+        Write-Success "Repositorio '$REPO_NAME' ja existe!"
         Write-Info "URL: https://github.com/$GITHUB_USER/$REPO_NAME"
         
         # Configurar remote mesmo assim
@@ -90,7 +90,7 @@ try {
         git remote add origin "https://github.com/$GITHUB_USER/$REPO_NAME.git"
         
         # Tentar push
-        Write-Info "Tentando fazer push para repositório existente..."
+        Write-Info "Tentando fazer push para repositorio existente..."
         $repoUrlWithToken = "https://$GITHUB_USER`:$Token@github.com/$GITHUB_USER/$REPO_NAME.git"
         git remote set-url origin $repoUrlWithToken
         
@@ -104,15 +104,15 @@ try {
         }
         
     } else {
-        Write-Error-Custom "Erro ao criar repositório: $($_.Exception.Message)"
+        Write-Error-Custom "Erro ao criar repositorio: $($_.Exception.Message)"
         
         if ($_.Exception.Message -like "*401*") {
-            Write-Host "Erro de autenticação. Verifique seu token:" -ForegroundColor Yellow
+            Write-Host "Erro de autenticacao. Verifique seu token:" -ForegroundColor Yellow
             Write-Host "1. Acesse: https://github.com/settings/tokens" -ForegroundColor Yellow
             Write-Host "2. Verifique se o token tem escopo 'repo'" -ForegroundColor Yellow
-            Write-Host "3. Verifique se o token não expirou" -ForegroundColor Yellow
+            Write-Host "3. Verifique se o token nao expirou" -ForegroundColor Yellow
         }
     }
 }
 
-Write-Host "Concluído!" -ForegroundColor Green
+Write-Host "Concluido!" -ForegroundColor Green
